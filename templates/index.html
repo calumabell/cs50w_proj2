@@ -15,6 +15,9 @@
             </form>
 
             <ul id="messages">
+                {% for message in messages %}
+                    <li> {{ message.msg + ' ' + message.timestamp }}
+                {% endfor %}
             </ul>
         </div>
     </body>

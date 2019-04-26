@@ -9,15 +9,20 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
 
-history = []
+chatLog = []
+logSize = 10
 
 @app.route("/")
 def index():
-    return render_template("index.html", messages=history)
+    return render_template("index.html", messages=chatLog)
 
 @socketio.on('submit message')
 def msg(data):
     # Add message to the front of the chat history list
+    chatLog.insert(0, data)
+    if len(chatLog) >= logSize:
+        chatLog.pop(logSize)
+
     emit('new message', data, broadcast=True)
 
 if __name__ == '__main__':
