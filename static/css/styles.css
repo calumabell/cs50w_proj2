@@ -1,0 +1,16 @@
+/* Sidebar */
+#sidebar-wrapper {
+    z-index: 1;
+    position: absolute;
+    width: 250px;
+    height: 100%;
+    overflow-y: hidden;
+    background-color: #D3D3D3;
+}
+
+/* Page content */
+#content-wrapper {
+    width: 100%;
+    padding-left: 250px;
+    position: absolute;
+}
