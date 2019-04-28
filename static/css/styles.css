@@ -2,15 +2,44 @@
 #sidebar-wrapper {
     z-index: 1;
     position: absolute;
-    width: 250px;
+    width: 200px;
     height: 100%;
     overflow-y: hidden;
     background-color: #D3D3D3;
+    font-size: 11pt;
 }
 
+/* Style for sidebar links */
+#channel-list > li {
+    list-style: none;
+    line-height: 60px;
+    display: block;
+    border-right: 5px;
+
+}
+
+.channel-link {
+    text-indent: 10px;
+    transition: 1s;
+}
+
+.channel-link-open {
+    text-indent: 30px;
+    transition: 1s;
+}
+
+#channel-list > li:hover {
+    background-color: #FFFFFF;
+
+}
 /* Page content */
 #content-wrapper {
     width: 100%;
     padding-left: 250px;
     position: absolute;
+}
+
+
+#add-channel-btn {
+    font-size: 20pt;
 }

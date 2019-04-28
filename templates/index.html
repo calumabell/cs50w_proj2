@@ -28,11 +28,15 @@
 
             <!-- Sidebar -->
             <div id="sidebar-wrapper">
-                <ul class="list-group sidebar-nav">
-                    <li class="list-group-item">Channel 1</li>
-                    <li class="list-group-item">Channel 2</li>
-                    <li class="list-group-item">Channel 3</li>
+                <ul id="channel-list">
+                    <h4 class="text-muted">Channels</h6>
                 </ul>
+
+                <form id="add-channel-form" class="form-group">
+                    <input type="test" id="new-channel-name" class="form-control" autocomplete="off">
+                    <button id="add-channel-btn" type="submit">&#x2b;</button>
+                </form>
+
             </div>
 
             <!-- Page content -->
@@ -43,7 +47,7 @@
                             <div id="messenger" class="form-group">
                                 <form id="submitMessage">
                                     <input type="text" id="newMessage" autocomplete="off">
-                                    <input type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-primary">Send</button>
                                 </form>
 
                                 <ul class="list-group" id="messages">

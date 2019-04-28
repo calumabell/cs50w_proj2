@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask, render_template, request, url_for
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, join_room, leave_room
 
 # Initialise Flask and SocketIO
 app = Flask(__name__)
@@ -31,6 +31,9 @@ def getHistory():
     for i in range(len(chatLog), 0, -1):
         emit('new message', chatLog[i-1])
 
+@socketio.on('submit new channel')
+def newChannel(data):
+    emit('create channel', data, broadcast=True)
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
