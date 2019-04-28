@@ -20,11 +20,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Entering a message into the form emits a 'submit message' event
         document.querySelector('#submitMessage').onsubmit = () => {
+            // Get current channel
+            const channel = document.querySelector('.channel-link-open').innerHTML
+
+            // if not in a channel, return
+            if (!channel) {
+                return false
+            }
 
             const message = document.querySelector('#newMessage').value
             const d = new Date()
             document.querySelector('#newMessage').value = ""
-            socket.emit('submit message', {'name': name, 'msg': message, 'timestamp': d.toUTCString()})
+
+            socket.emit('submit message', {'name': name, 'msg': message, 'channel': channel, 'timestamp': d.toUTCString()})
 
             // return false to stop page from reloading
             return false
@@ -35,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.on('new message', data => {
 
             // Use message info from data param and render template
-            const context = {"name": data.name, "timestamp": data.timestamp, "message": data.msg}
+            const context = {"name": data.name, "timestamp": data.timestamp, "channel": data.channel, "message": data.msg}
             const card = template(context)
             // Add message to DOM (add new messages to top of list)
             document.getElementById("messages").innerHTML = card + document.getElementById("messages").innerHTML
