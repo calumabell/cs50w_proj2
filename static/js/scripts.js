@@ -11,8 +11,14 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('name', name)
     }
 
+    socket.on('test' , data => {
+            console.log(data["info"])
+    })
+
     // When connected, configure listeners
     socket.on('connect', () => {
+
+        socket.emit('load channel list')
 
         // if a channel is stored in local memory, open it
         if (localStorage.getItem('channel')) {
@@ -74,7 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Clicking on a link changes it class/style and emits
             channelLink.onclick = () => {
-                console.log(data.channel)
                 // Check that a closed channel link was clicked
                 if (channelLink.className == 'channel-link') {
 

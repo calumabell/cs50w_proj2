@@ -23,23 +23,25 @@ chatLog where messeges sent to that channel will be stored.
 
 @socketio.on('load channel list')
 def loadChannelList():
+    emit('test', {"info" : len(channels)})
     for channel in channels:
-        emit('create channel', {'channel': channel})
+        emit('create channel', {"channel": channel})
+
 
 @socketio.on('submit new channel')
 def newChannel(data):
-    channels[data["channel"]] = []
+    channels[data["channel"]] = {"name": data["channel"], "msgs": []}
     emit('create channel', data, broadcast=True)
 
 @socketio.on('submit message')
 def msg(data):
     channel = data["channel"]
     # add message to the front of the list at channel names dict key
-    channels[channel].insert(0, data)
+    channels[channel]["msgs"].insert(0, data)
 
     # if no. messages exceeds max. remove the oldest msg
-    if len(channels[channel]) >= maxMsgPerCh:
-        channels[channel].pop(maxMsgPerCh)
+    if len(channels[channel]["msgs"]) >= maxMsgPerCh:
+        channels[channel]["msgs"].pop(maxMsgPerCh)
 
     # broadcast message to all users
     emit('new message', data, broadcast=True)
@@ -48,8 +50,7 @@ def msg(data):
 def openChannel(data):
     channelName = data["channel"]
     if channelName in channels:
-        channelName = data["channel"]
-        channel = channels[channelName]
+        channel = channels[channelName]["msgs"]
 
         # Iterate through history backwards so that newest messages are top
         for i in range(len(channel), 0, -1):
