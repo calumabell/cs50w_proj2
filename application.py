@@ -17,16 +17,19 @@ maxMsgPerCh = 10
 def index():
     return render_template("index.html")
 
-""" newChannel (on 'submit new channel' event): Adds a dict key to the
-chatLog where messeges sent to that channel will be stored.
+""" loadChannelList: on a 'load channel list' event, creates a new channel link
+for each channel stored in server memeory. This happens as soon as SocketIO is
+connected to reload channels made in other windows.
 """
 
 @socketio.on('load channel list')
 def loadChannelList():
-    emit('test', {"info" : len(channels)})
     for channel in channels:
         emit('create channel', {"channel": channel})
 
+""" newChannel: on a 'submit new channel' event add a  key to the channels dict.
+This key will hold the channel name as a string and an empty list for messages.
+"""
 
 @socketio.on('submit new channel')
 def newChannel(data):
@@ -46,9 +49,12 @@ def msg(data):
     # broadcast message to all users
     emit('new message', data, broadcast=True)
 
+
+
 @socketio.on('open channel')
 def openChannel(data):
     channelName = data["channel"]
+    # Make sure that channel exists in memory
     if channelName in channels:
         channel = channels[channelName]["msgs"]
 

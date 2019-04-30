@@ -16,10 +16,28 @@
     position: absolute;
 }
 
-/* */
 #messenger {
-    padding-left: 20px;
+    z-index: 1;
+    background-color: #D3D3D3;
+    overflow: hidden;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 20px;
 }
+#newMessage {
+    width: 50%;
+}
+
+
+#messages {
+    padding-bottom: 100px;
+}
+
+#channel-header {
+    padding: 20px;
+}
+
 
 /* Style for sidebar links */
 #channel-list > li {
@@ -39,6 +57,7 @@
 .channel-link-open {
     text-indent: 30px;
     transition: 1s;
+    background-color: #EEEEEE;
 }
 
 #channel-list > li:hover {
