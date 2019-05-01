@@ -9,14 +9,13 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
         <script id="cardTemplate" type="text/x-handlebars-template">
             <li class="list-group-item">
-                <div class="card">
-                    {% raw -%}
+                {% raw -%}
+                <div class="card" id="msg{{ id }}">                    
                     <h5 class="card-title">{{ name }}</h5>
                     <h7 class="card-subtitle mb-2 text-muted">{{ timestamp }} (in {{ channel }})</h7>
                     <p class="card-text">{{ message }}</p>
-
-                    {%- endraw %}
                 </div>
+                {%- endraw %}
             </li>
         </script>
 

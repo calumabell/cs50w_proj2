@@ -5,6 +5,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Template for message card
     const template = Handlebars.compile(document.querySelector('#cardTemplate').innerHTML)
 
+    // Load id from localStorage. If there isn't one, start it from zero again
+    let id = localStorage.getItem('id')
+    if (!id) {
+        id = 0
+        localStorage.setItem('id', id)
+    }
+
+    // Load username from localStorage. If there isn't one, get one
     let name = localStorage.getItem('name')
     if (!name) {
         name = prompt("What is your name?")
@@ -44,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const d = new Date()
 
-            socket.emit('submit message', {'name': name, 'msg': message, 'channel': channel, 'timestamp': d.toUTCString()})
+            socket.emit('submit message', {'id': id++, 'name': name, 'msg': message, 'channel': channel, 'timestamp': d.toUTCString()})
 
             // return false to stop page from reloading
             return false
@@ -57,11 +65,14 @@ document.addEventListener('DOMContentLoaded', () => {
             // Make sure that the user is in the correct channel
             if (data.channel == localStorage.getItem('channel')) {
                 // Use message info from data param and render template
-                const context = {"name": data.name, "timestamp": data.timestamp, "channel": data.channel, "message": data.msg}
+                const context = {"id": data.id, "name": data.name, "timestamp": data.timestamp, "channel": data.channel, "message": data.msg}
                 const card = template(context)
 
                 // Add message to DOM (add new messages to top of list)
                 document.getElementById("messages").innerHTML = card + document.getElementById("messages").innerHTML
+
+                // Update id in local localStorage
+                localStorage.setItem("id", id)
             }
         })
 
