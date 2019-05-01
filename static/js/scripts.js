@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const d = new Date()
 
-            socket.emit('submit message', {'id': id++, 'name': name, 'msg': message, 'channel': channel, 'timestamp': d.toUTCString()})
+            socket.emit('submit message', {'id': ++id, 'name': name, 'msg': message, 'channel': channel, 'timestamp': d.toUTCString()})
 
             // return false to stop page from reloading
             return false
@@ -66,14 +66,42 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.channel == localStorage.getItem('channel')) {
                 // Use message info from data param and render template
                 const context = {"id": data.id, "name": data.name, "timestamp": data.timestamp, "channel": data.channel, "message": data.msg}
-                const card = template(context)
+
+                // From HTML string, create a DOM element
+                const card = new DOMParser().parseFromString(template(context), 'text/html')
 
                 // Add message to DOM (add new messages to top of list)
-                document.getElementById("messages").innerHTML = card + document.getElementById("messages").innerHTML
+                const messenger = document.getElementById("messages")
+                messenger.insertBefore(card.body, messenger.firstChild)
 
                 // Update id in local localStorage
-                localStorage.setItem("id", id)
+                localStorage.setItem("id", data.id)
+
+                // If this message was sent by the current user, add some extra buttons
+                if (data.name == localStorage.getItem("name")) {
+
+                    // Create a button that deletes this message
+                    const delButton = document.createElement("button")
+                    delButton.innerHTML = "Delete"
+                    delButton.className = "delete-btn"
+
+                    // Append delete button to the message
+                    document.getElementById(data.id).appendChild(delButton)
+
+                    // Delete message if the button is clicked
+                    delButton.onclick = () => {
+                        // Remove message from memeory
+                        socket.emit('delete message', data)
+                    }
+                }
+
             }
+        })
+
+        socket.on('remove message from DOM', data => {
+            // Remove message from DOM
+            const msgToDelete = document.getElementById(data.id)
+            msgToDelete.parentNode.removeChild(msgToDelete)
         })
 
 
@@ -153,4 +181,8 @@ function sanitiseChannel(str) {
     while (string.includes("_"))
         string = string.replace("_", "-")
     return string
+}
+
+function deleteMessage(id) {
+
 }

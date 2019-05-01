@@ -50,6 +50,15 @@ def msg(data):
     emit('new message', data, broadcast=True)
 
 
+@socketio.on('delete message')
+def deleteMessage(data):
+    ch = data["channel"]
+    for i in range(len(channels[ch]["msgs"])):
+        if channels[ch]["msgs"][i]["id"] == data["id"]:
+            del channels[ch]["msgs"][i]
+            break
+
+    emit('remove message from DOM', data, broadcast=True)
 
 @socketio.on('open channel')
 def openChannel(data):

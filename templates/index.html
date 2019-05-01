@@ -8,15 +8,15 @@
         <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
         <script id="cardTemplate" type="text/x-handlebars-template">
-            <li class="list-group-item">
-                {% raw -%}
-                <div class="card" id="msg{{ id }}">                    
+            {% raw -%}
+            <li class="list-group-item" id="{{id}}">
+                <div class="card">
                     <h5 class="card-title">{{ name }}</h5>
                     <h7 class="card-subtitle mb-2 text-muted">{{ timestamp }} (in {{ channel }})</h7>
                     <p class="card-text">{{ message }}</p>
                 </div>
-                {%- endraw %}
             </li>
+            {%- endraw %}
         </script>
 
         <title>Schwach</title>
