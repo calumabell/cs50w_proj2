@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port)
 
     // Template for message card
-    const template = Handlebars.compile(document.querySelector('#cardTemplate').innerHTML)
+    const messageTemplate = Handlebars.compile(document.querySelector('#cardTemplate').innerHTML)
 
     // Load id from localStorage. If there isn't one, start it from zero again
     let id = localStorage.getItem('id')
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const context = {"id": data.id, "name": data.name, "timestamp": data.timestamp, "channel": data.channel, "message": data.msg}
 
                 // From HTML string, create a DOM element
-                const card = new DOMParser().parseFromString(template(context), 'text/html')
+                const card = new DOMParser().parseFromString(messageTemplate(context), 'text/html')
 
                 // Add message to DOM (add new messages to top of list)
                 const messenger = document.getElementById("messages")
@@ -85,8 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     delButton.innerHTML = "Delete"
                     delButton.className = "delete-btn"
 
-                    // Append delete button to the message
-                    document.getElementById(data.id).appendChild(delButton)
+                    // Append delete button to the message before <hr>
+                    document.getElementById(data.id).insertBefore(delButton, document.getElementById(data.id).childNodes[3])
 
                     // Delete message if the button is clicked
                     delButton.onclick = () => {
@@ -98,10 +98,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
 
+        // When the remove message button is clicked, remove message from DOM
         socket.on('remove message from DOM', data => {
-            // Remove message from DOM
             const msgToDelete = document.getElementById(data.id)
-            msgToDelete.parentNode.removeChild(msgToDelete)
+            msgToDelete.style.animationPlayState = 'running'
+            msgToDelete.addEventListener('animationend', () => {
+                msgToDelete.parentNode.removeChild(msgToDelete)
+            })
         })
 
 
@@ -181,8 +184,4 @@ function sanitiseChannel(str) {
     while (string.includes("_"))
         string = string.replace("_", "-")
     return string
-}
-
-function deleteMessage(id) {
-
 }

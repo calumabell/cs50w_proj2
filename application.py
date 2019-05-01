@@ -10,7 +10,7 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
 channels = {}
-maxMsgPerCh = 10
+maxMsgPerCh = 100
 
 
 @app.route("/")

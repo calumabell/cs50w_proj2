@@ -9,6 +9,10 @@
     font-size: 11pt;
 }
 
+.site-brand {
+    boarder: 10px;
+}
+
 /* Page content */
 #content-wrapper {
     width: 100%;
@@ -16,6 +20,8 @@
     position: absolute;
 }
 
+
+/* Styling for the horizontal bar containing the messenger form */
 #messenger {
     z-index: 1;
     background-color: #D3D3D3;
@@ -25,13 +31,86 @@
     width: 100%;
     padding: 20px;
 }
+
+/* Styling for the message input text field */
 #newMessage {
     width: 50%;
 }
 
-
+/* Style for ul containing msg, padding stop messages being stuck behind form */
 #messages {
-    padding-bottom: 100px;
+    margin: 0px;
+    padding: 0px 0px 100px 0px;
+    list-style: none;
+}
+
+hr {
+    padding: 0px;
+    margin: 0px;
+}
+
+h5 {
+    padding: 0px;
+    margin: 0px;
+}
+/* Animation for adding messages */
+@keyframes hide {
+    0% {
+        opacity: 1;
+        height: 100%;
+        line-height: 100%;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    75% {
+        opacity: 0;
+        height: 100%;
+        line-height: 100%;
+        padding: 20px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    100% {
+        opacity: 0;
+        height: 0%;
+        line-height: 0%;
+        padding: 0px;
+        margin-bottom: 0px;
+        margin-top: 0px;
+    }
+}
+
+/* Style for message li */
+.message-list-item {
+    padding: 20px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    list-style: none;
+    border-color: 'grey';
+    animation-name: hide;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    animation-play-state: paused;
+}
+
+/* */
+.delete-btn {
+    display: inline-block;
+    text-align: center;
+    padding: 0px 15px 0px 15px;
+    margin: 0px 15px 0px 0px;
+    border-radius: 8px;
+    border: 1px solid #FF0000;
+    transition-duration: 0.4s;
+    position: absolute;
+    right: 0;
+}
+
+.delete-btn:hover {
+    background-color: #A00000;
+    color: #FFFFFF;
 }
 
 #channel-header {

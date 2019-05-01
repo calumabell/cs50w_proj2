@@ -7,14 +7,15 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css')}}">
         <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
+
+        <!-- Handlebars template for message cards -->
         <script id="cardTemplate" type="text/x-handlebars-template">
             {% raw -%}
-            <li class="list-group-item" id="{{id}}">
-                <div class="card">
-                    <h5 class="card-title">{{ name }}</h5>
-                    <h7 class="card-subtitle mb-2 text-muted">{{ timestamp }} (in {{ channel }})</h7>
-                    <p class="card-text">{{ message }}</p>
-                </div>
+            <li class="message-list-item" id="{{id}}">
+                <h5 class="card-title">{{ name }}</h5>
+                <h7 class="card-subtitle mb-2 text-muted">{{ timestamp }} (in {{ channel }})</h7>
+                <p class="card-text">{{ message }}</p>
+                <hr>
             </li>
             {%- endraw %}
         </script>
@@ -28,8 +29,10 @@
 
             <!-- Sidebar -->
             <div id="sidebar-wrapper">
+                    <h3 class="site-brand">Schwach</h3>
+                    <h4 class="text-muted">Channels</h4>
+
                 <ul id="channel-list">
-                    <h4 class="text-muted">Channels</h6>
                 </ul>
 
                 <!-- Add channel form-->
@@ -50,12 +53,13 @@
 
                             <!-- Navbar -->
                             <nav class="navbar navbar-light bg-light">
-                                <a class="navbar-brand">Schwach</a>
+                                <h3 id="channel-header"></h3>
                             </nav>
 
-                            <h3 id="channel-header"></h3>
 
-                            <ul class="list-group" id="messages">
+
+                            <!-- <ul class="list-group" id="messages"> -->
+                            <ul id="messages">
                             </ul>
 
                             <div id="messenger" class="form-group">
