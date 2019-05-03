@@ -12,9 +12,9 @@
         <script id="cardTemplate" type="text/x-handlebars-template">
             {% raw -%}
             <li class="message-list-item" id="{{id}}">
-                <h5 class="card-title">{{ name }}</h5>
-                <h7 class="card-subtitle mb-2 text-muted">{{ timestamp }} (in {{ channel }})</h7>
-                <p class="card-text">{{ message }}</p>
+                <h5 class="message-header">{{ name }}</h5>
+                <h7 class="message-timestamp">{{ timestamp }} (in {{ channel }})</h7>
+                <p class="message-text">{{ message }}</p>
                 <hr>
             </li>
             {%- endraw %}
