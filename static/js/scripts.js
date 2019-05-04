@@ -101,6 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // When the remove message button is clicked, remove message from DOM
         socket.on('remove message from DOM', data => {
             const msgToDelete = document.getElementById(data.id)
+            msgToDelete.style.animationDirection = 'normal'
             msgToDelete.style.animationPlayState = 'running'
             msgToDelete.addEventListener('animationend', () => {
                 msgToDelete.parentNode.removeChild(msgToDelete)

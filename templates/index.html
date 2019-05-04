@@ -11,10 +11,10 @@
         <!-- Handlebars template for message cards -->
         <script id="cardTemplate" type="text/x-handlebars-template">
             {% raw -%}
-            <li class="message-list-item" id="{{id}}">
-                <h5 class="message-header">{{ name }}</h5>
-                <h7 class="message-timestamp">{{ timestamp }} (in {{ channel }})</h7>
-                <p class="message-text">{{ message }}</p>
+            <li class="flexbox message-list-item" id="{{id}}">
+                <p class="message-header message-text">{{ name }}</p>
+                <p class="message-timestamp message-text">{{ timestamp }} (in {{ channel }})</p>
+                <p class="message-text message-text">{{ message }}</p>
                 <hr>
             </li>
             {%- endraw %}
@@ -30,6 +30,7 @@
             <!-- Sidebar -->
             <div id="sidebar-wrapper">
                     <h3 class="site-brand">Schwach</h3>
+                    <p>The messaging app that sometimes works.</p>
                     <h4 class="text-muted">Channels</h4>
 
                 <ul id="channel-list">
