@@ -46,6 +46,9 @@ def msg(data):
     if len(channels[channel]["msgs"]) >= maxMsgPerCh:
         channels[channel]["msgs"].pop(maxMsgPerCh)
 
+    # Tell client that this message wasn't loaded from server side memory
+    data["fromMem"] = False
+
     # broadcast message to all users
     emit('new message', data, broadcast=True)
 
@@ -69,6 +72,9 @@ def openChannel(data):
 
         # Iterate through history backwards so that newest messages are top
         for i in range(len(channel), 0, -1):
+
+            # add key to msg to tell client that this msg was loaded from memory
+            params = channel[i-1]["fromMem"] = True
             # for each message in channel, emit a 'new message'
             emit('new message', channel[i-1])
 

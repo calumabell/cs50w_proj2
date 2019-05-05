@@ -41,7 +41,7 @@
   margin: 0px;
   padding: 0px 0px 100px 0px;
   list-style: none;
-  line-height: 0px;
+  line-height: 0%;
 }
 
 /* Animation for removing messages */
@@ -52,7 +52,7 @@
     line-height: 100%;
     padding: 4px 0px 2px 15px;
     margin: 2px 0px 2px 0px;
-    font-size: 100%;
+    border-width: 1px;
   }
   75% {
     opacity: 0;
@@ -60,37 +60,38 @@
     line-height: 100%;
     padding: 4px 0px 2px 15px;
     margin: 2px 0px 2px 0px;
-    font-size: 100%;
+    border-width: 1px;
   }
   100% {
     opacity: 0;
     height: 0px;
     line-height: 0%;
-    padding: 0px 0px 0px 0px;
-    margin: 0px 0px 0px 0px;
-    font-size: 0%;
+    padding: 0px;
+    margin: 0px;
+    border-width: 0px;
   }
 }
 /* Style for message li */
 .message-list-item {
-  display: block;
   padding: 4px 0px 2px 15px;
   margin: 2px 0px 2px 0px;
-  list-style: none;
-  line-height: 6px;
-  animation-name: hide;
-  animation-duration: 1.5s;
+  border-style: solid;
+  border-color: #000000;
+  border-width: 1px;
+  animation-name: hide, hide;
+  animation-duration: 1s;
+  animation-direction: normal;
+  animation-play-state: running;
   animation-fill-mode: forwards;
-  animation-play-state: paused;
   overflow: hidden;
 }
 .message-list-item p {
   padding: inherit;
   margin: inherit;
 }
-.message-list-item hr {
+.message-list-item .message-end {
+  padding: inherit;
   margin: inherit;
-  color: #EAEAEA;
 }
 .message-list-item .message-header {
   font-weight: bold;
@@ -98,26 +99,24 @@
 .message-list-item .message-timestamp {
   color: #D3D3D3;
 }
-
-/* */
-.delete-btn {
+.message-list-item .delete-btn {
   display: inline-block;
   text-align: center;
-  padding: 0px 15px 0px 15px;
-  margin: 0px 15px 0px 0px;
+  padding: inherit;
+  margin: inherit;
+  margin-right: 15px;
   border-radius: 4px;
   border: 1px solid #FF0000;
   transition-duration: 0.4s;
-  position: absolute;
   display: inline-block;
-  right: 0;
+  right: 15px;
 }
-
-.delete-btn:hover {
+.message-list-item .delete-btn:hover {
   background-color: #A00000;
   color: #FFFFFF;
 }
 
+/* */
 #channel-header {
   padding: 20px;
 }

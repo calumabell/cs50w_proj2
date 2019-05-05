@@ -64,29 +64,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Make sure that the user is in the correct channel
             if (data.channel == localStorage.getItem('channel')) {
+
+                // Check if message was sent my current user
+                const isUser = (data.name == localStorage.getItem("name"))
+
                 // Use message info from data param and render template
-                const context = {"id": data.id, "name": data.name, "timestamp": data.timestamp, "channel": data.channel, "message": data.msg}
+                const context = {"id": data.id, "name": data.name, "isUser": isUser, "timestamp": data.timestamp, "channel": data.channel, "message": data.msg}
 
                 // From HTML string, create a DOM element
-                const card = new DOMParser().parseFromString(messageTemplate(context), 'text/html')
+                const doc = new DOMParser().parseFromString(messageTemplate(context), 'text/html')
+                const card = doc.body.firstChild
 
+                // Don't animate message if loaded from memory
+                if (data.fromMem) {
+                    card.style.animationPlayState = "paused"
+                }
+                else {
+                    card.style.animationDirection = "reverse"
+                    card.style.animationPlayState = "running"
+                }
                 // Add message to DOM (add new messages to top of list)
                 const messenger = document.getElementById("messages")
-                messenger.insertBefore(card.body, messenger.firstChild)
+                messenger.insertBefore(card, messenger.firstChild)
 
                 // Update id in local localStorage
                 localStorage.setItem("id", data.id)
 
-                // If this message was sent by the current user, add some extra buttons
+                // If this message was sent by the current user, add listeners
+                // to template buttons
                 if (data.name == localStorage.getItem("name")) {
 
-                    // Create a button that deletes this message
-                    const delButton = document.createElement("button")
-                    delButton.innerHTML = "Delete"
-                    delButton.className = "delete-btn"
-
-                    // Append delete button to the message before <hr>
-                    document.getElementById(data.id).insertBefore(delButton, document.getElementById(data.id).childNodes[3])
+                    // Get delete button for message with a given ID
+                    const delButton = document.getElementById(`del-${data.id}`)
 
                     // Delete message if the button is clicked
                     delButton.onclick = () => {
@@ -100,11 +109,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // When the remove message button is clicked, remove message from DOM
         socket.on('remove message from DOM', data => {
+            // A bit of a hack -> cloning  msg node to reset CSS animation
             const msgToDelete = document.getElementById(data.id)
-            msgToDelete.style.animationDirection = 'normal'
-            msgToDelete.style.animationPlayState = 'running'
+            const msgCopy = msgToDelete.cloneNode(true)
+            msgCopy.style.animationDirection = "normal"
+            msgCopy.style.animationPlayState = "running"
+            msgToDelete.parentNode.replaceChild(msgCopy, msgToDelete)
+
             msgToDelete.addEventListener('animationend', () => {
-                msgToDelete.parentNode.removeChild(msgToDelete)
+                msgCopy.remove()
             })
         })
 
@@ -177,9 +190,14 @@ document.addEventListener('DOMContentLoaded', () => {
 // sanitiseChannel(str): takes a string as an argument and returns a santised
 // lc string if between 1-14 chars if possible. else returns false
 function sanitiseChannel(str) {
-    let string = str.toLowerCase()
-    if (string.length == 0 || string.length > 14)
+    // Check that string length is valid
+    if (!str)
         return false
+
+    if (str.length == 0 || str.length > 14)
+        return false
+
+    let string = str.toLowerCase()
     while (string.includes(" "))
         string = string.replace(" ", "-")
     while (string.includes("_"))

@@ -11,11 +11,13 @@
         <!-- Handlebars template for message cards -->
         <script id="cardTemplate" type="text/x-handlebars-template">
             {% raw -%}
-            <li class="flexbox message-list-item" id="{{id}}">
+            <li class="message-list-item" id="{{id}}">
                 <p class="message-header message-text">{{ name }}</p>
                 <p class="message-timestamp message-text">{{ timestamp }} (in {{ channel }})</p>
                 <p class="message-text message-text">{{ message }}</p>
-                <hr>
+                {{#if isUser}}
+                    <button class="delete-btn" id="del-{{id}}">Delete</button>
+                {{/if}}
             </li>
             {%- endraw %}
         </script>

@@ -42,7 +42,7 @@
     margin: 0px;
     padding: 0px 0px 100px 0px;
     list-style: none;
-    line-height: 0px;
+    line-height: 0%;
 }
 
 $message-padding: 4px 0px 2px 15px;
@@ -56,7 +56,7 @@ $message-margin: 2px 0px 2px 0px;
         line-height: 100%;
         padding: $message-padding;
         margin: $message-margin;
-        font-size: 100%;
+        border-width: 1px;
     }
 
     75% {
@@ -65,39 +65,41 @@ $message-margin: 2px 0px 2px 0px;
         line-height: 100%;
         padding: $message-padding;
         margin: $message-margin;
-        font-size: 100%;
+        border-width: 1px;
     }
 
     100% {
         opacity: 0;
         height: 0px;
         line-height: 0%;
-        padding: 0px 0px 0px 0px;
-        margin: 0px 0px 0px 0px;
-        font-size: 0%;
+        padding: 0px;
+        margin: 0px;
+        border-width: 0px;
     }
 }
 
 /* Style for message li */
 .message-list-item {
-    display: block;
+    // display: block;
     padding: $message-padding;
     margin: $message-margin;
-    list-style: none;
-    line-height: 6px;
-    animation-name: hide;
-    animation-duration: 1.5s;
+    border-style: solid;
+    border-color: #000000;
+    border-width: 1px;
+    animation-name: hide, hide;
+    animation-duration: 1s;
+    animation-direction: normal;
+    animation-play-state: running;
     animation-fill-mode: forwards;
-    animation-play-state: paused;
     overflow: hidden;
     p {
         padding: inherit;
-        margin:inherit;
+        margin: inherit;
     }
 
-    hr {
+    .message-end {
+        padding: inherit;
         margin: inherit;
-        color: #EAEAEA;
     }
 
     .message-header {
@@ -107,27 +109,26 @@ $message-margin: 2px 0px 2px 0px;
     .message-timestamp {
         color: #D3D3D3;
     }
+
+    .delete-btn {
+        display: inline-block;
+        text-align: center;
+        padding: inherit;
+        margin: inherit;
+        margin-right: 15px;
+        border-radius: 4px;
+        border: 1px solid #FF0000;
+        transition-duration: 0.4s;
+        display: inline-block;
+        right: 15px;
+    }
+
+    .delete-btn:hover {
+        background-color: #A00000;
+        color: #FFFFFF;
+    }
 }
-
-
 /* */
-.delete-btn {
-    display: inline-block;
-    text-align: center;
-    padding: 0px 15px 0px 15px;
-    margin: 0px 15px 0px 0px;
-    border-radius: 4px;
-    border: 1px solid #FF0000;
-    transition-duration: 0.4s;
-    position: absolute;
-    display: inline-block;
-    right: 0;
-}
-
-.delete-btn:hover {
-    background-color: #A00000;
-    color: #FFFFFF;
-}
 
 #channel-header {
     padding: 20px;
