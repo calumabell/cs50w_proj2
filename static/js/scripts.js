@@ -62,9 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // When a new message is received, append it to the DOM
         socket.on('new message', data => {
 
-            // Make sure that the user is in the correct channel
-            if (data.channel == localStorage.getItem('channel')) {
+            // If the message is on a different channel, alert user
+            if (!(data.channel == localStorage.getItem('channel')))
+                document.getElementById(`channel-${data.channel}`).style.backgroundColor = "#FFAAAA"
 
+            // If the message is on the current channel, append it to DOM
+            else {
                 // Check if message was sent my current user
                 const isUser = (data.name == localStorage.getItem("name"))
 
@@ -117,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
             msgToDelete.parentNode.replaceChild(msgCopy, msgToDelete)
 
             msgToDelete.addEventListener('animationend', () => {
-                msgCopy.remove()
+                msgCopy.parentNode.removeChild(msgCopy)
             })
         })
 
@@ -133,18 +136,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // When 'create channel' is recevied: add a new channel to the sidebar
         socket.on('create channel', data => {
+            const channel = data.channel
             // Create new HTML element using data
-            const channel = sanitiseChannel(data.channel)
-            if (!channel) {
-                return
-            }
             const channelLink = document.createElement("li")
             channelLink.innerHTML = channel
             channelLink.className = 'channel-link'
+            channelLink.id = `channel-${channel}`
 
             // Indent the link of the previous channel stored in memory
             // (this will only happen via the 'load channel list' event)
-            if (data.channel == localStorage.getItem("channel")) {
+            if (channel == localStorage.getItem("channel")) {
                 channelLink.className = 'channel-link-open'
                 document.getElementById('channel-header').innerHTML = channel
 
@@ -155,6 +156,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Check that a closed channel link was clicked
                 if (channelLink.className == 'channel-link') {
 
+                    // Clear overloaded background colour from message alert
+                    channelLink.style.backgroundColor = ""
+
                     // Close previous channel
                     const openChannel = document.querySelector('.channel-link-open')
                     if (openChannel) {
@@ -163,7 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // Update link class, this will trigger the animation
                     channelLink.className = 'channel-link-open'
-
                     // Store channel name in local storage
                     localStorage.setItem('channel', channel)
 

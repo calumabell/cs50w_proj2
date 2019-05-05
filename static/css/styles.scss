@@ -46,7 +46,7 @@
 }
 
 $message-padding: 4px 0px 2px 15px;
-$message-margin: 2px 0px 2px 0px;
+$message-margin: 5px 0px 5px 0px;
 
 /* Animation for removing messages */
 @keyframes hide {
@@ -56,7 +56,7 @@ $message-margin: 2px 0px 2px 0px;
         line-height: 100%;
         padding: $message-padding;
         margin: $message-margin;
-        border-width: 1px;
+        border: 1px solid #DEDEDE;
     }
 
     75% {
@@ -65,7 +65,7 @@ $message-margin: 2px 0px 2px 0px;
         line-height: 100%;
         padding: $message-padding;
         margin: $message-margin;
-        border-width: 1px;
+        border: 1px solid #DEDEDE;
     }
 
     100% {
@@ -74,19 +74,20 @@ $message-margin: 2px 0px 2px 0px;
         line-height: 0%;
         padding: 0px;
         margin: 0px;
-        border-width: 0px;
+        border: 0px solid #DEDEDE;
     }
 }
 
 /* Style for message li */
 .message-list-item {
     // display: block;
+    position: relative;
     padding: $message-padding;
     margin: $message-margin;
     border-style: solid;
-    border-color: #000000;
+    border-color: #DEDEDE;
     border-width: 1px;
-    animation-name: hide, hide;
+    animation-name: hide;
     animation-duration: 1s;
     animation-direction: normal;
     animation-play-state: running;
@@ -111,16 +112,19 @@ $message-margin: 2px 0px 2px 0px;
     }
 
     .delete-btn {
-        display: inline-block;
+        position: absolute;
+        //display: inline-block;
         text-align: center;
         padding: inherit;
         margin: inherit;
         margin-right: 15px;
         border-radius: 4px;
+        height: 25%;
         border: 1px solid #FF0000;
         transition-duration: 0.4s;
-        display: inline-block;
-        right: 15px;
+        top: 0;
+        bottom: 0;
+        right: 0;
     }
 
     .delete-btn:hover {
@@ -148,6 +152,7 @@ $message-margin: 2px 0px 2px 0px;
 .channel-link {
     text-indent: 10px;
     transition: 1s;
+    background-color: #D3D3D3;
 }
 
 .channel-link-open {

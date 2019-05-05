@@ -51,16 +51,16 @@
     height: 100%;
     line-height: 100%;
     padding: 4px 0px 2px 15px;
-    margin: 2px 0px 2px 0px;
-    border-width: 1px;
+    margin: 5px 0px 5px 0px;
+    border: 1px solid #DEDEDE;
   }
   75% {
     opacity: 0;
     height: 100%;
     line-height: 100%;
     padding: 4px 0px 2px 15px;
-    margin: 2px 0px 2px 0px;
-    border-width: 1px;
+    margin: 5px 0px 5px 0px;
+    border: 1px solid #DEDEDE;
   }
   100% {
     opacity: 0;
@@ -68,17 +68,18 @@
     line-height: 0%;
     padding: 0px;
     margin: 0px;
-    border-width: 0px;
+    border: 0px solid #DEDEDE;
   }
 }
 /* Style for message li */
 .message-list-item {
+  position: relative;
   padding: 4px 0px 2px 15px;
-  margin: 2px 0px 2px 0px;
+  margin: 5px 0px 5px 0px;
   border-style: solid;
-  border-color: #000000;
+  border-color: #DEDEDE;
   border-width: 1px;
-  animation-name: hide, hide;
+  animation-name: hide;
   animation-duration: 1s;
   animation-direction: normal;
   animation-play-state: running;
@@ -100,16 +101,18 @@
   color: #D3D3D3;
 }
 .message-list-item .delete-btn {
-  display: inline-block;
+  position: absolute;
   text-align: center;
   padding: inherit;
   margin: inherit;
   margin-right: 15px;
   border-radius: 4px;
+  height: 25%;
   border: 1px solid #FF0000;
   transition-duration: 0.4s;
-  display: inline-block;
-  right: 15px;
+  top: 0;
+  bottom: 0;
+  right: 0;
 }
 .message-list-item .delete-btn:hover {
   background-color: #A00000;
