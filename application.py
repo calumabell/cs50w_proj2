@@ -28,6 +28,7 @@ def loadChannelList():
     for channel in channels:
         emit('create channel', {"channel": channel})
 
+
 """ newChannel: on a 'submit new channel' event add a  key to the channels dict.
 This key will hold the channel name as a string and an empty list for messages.
 """

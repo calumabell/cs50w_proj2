@@ -5,6 +5,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Template for message card
     const messageTemplate = Handlebars.compile(document.querySelector('#msgTemplate').innerHTML)
 
+    // Template for channel link
+    const channelTemplate = Handlebars.compile(document.querySelector('#channelLinkTemplate').innerHTML)
+
+
     // When connected, configure listeners
     socket.on('connect', () => {
 
@@ -22,9 +26,16 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('name', name)
         }
 
+        // Add user's name to top right of page
         document.getElementById('username-header').innerHTML = name
 
-        if (!localStorage.getItem('channel')) {
+        // if a channel is stored in local memory, open it
+        if (localStorage.getItem('channel')) {
+            socket.emit('open channel', {'channel': localStorage.getItem('channel')})
+        }
+
+        // else, create a welcome message
+        else {
             const welcomeTemp = Handlebars.compile(document.querySelector('#welcomeMessageTemplate').innerHTML)
             document.getElementById('messages').innerHTML = welcomeTemp()
         }
@@ -32,17 +43,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Once connected, load the channel list from server side memeory
         socket.emit('load channel list')
 
-        // if a channel is stored in local memory, open it
-        if (localStorage.getItem('channel')) {
-            socket.emit('open channel', {'channel': localStorage.getItem('channel')})
-        }
+        // *** NEW MESSAGE FORM SUBMITTED ***
+        // When a new msg is submitted, run some checks and then send it (with
+        // relavent data) to server
 
-        // Entering a message into the form emits a 'submit message' event
         document.querySelector('#submitMessage').onsubmit = () => {
 
             // Get current channel
-            const channel = document.querySelector('.channel-link-open').innerHTML
-
+            const channel = localStorage.getItem('channel')
             // if not in a channel, return
             if (!channel) {
                 return false
@@ -65,13 +73,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return false
         }
 
+        // *** NEW MESSAGE RECEIVED ***
+        // When a new message is received, append it to the DOM if you are in
+        // the correct channel. Else and an alert to the channel list
 
-        // When a new message is received, append it to the DOM
         socket.on('new message', data => {
-
             // If the message is on a different channel, alert user
             if (!(data.channel == localStorage.getItem('channel')))
-                document.getElementById(`channel-${data.channel}`).style.backgroundColor = "#FFAAAA"
+                updateMessageAlert(data.channel, "increment")
 
             // If the message is on the current channel, append it to DOM
             else {
@@ -117,7 +126,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
 
-        // When the remove message button is clicked, remove message from DOM
+        // *** REMOVE A MESSAGE FROM THE DOM ***
+        // When the 'rmfD' is received trigger delete animation and rmv from DOM
+
         socket.on('remove message from DOM', data => {
             // A bit of a hack -> cloning  msg node to reset CSS animation
             const msgToDelete = document.getElementById(data.id)
@@ -131,25 +142,31 @@ document.addEventListener('DOMContentLoaded', () => {
             })
         })
 
+        // *** CREATE CHANNEL FORM SUBMITTED ***
+        // When this form is submitted, sanitise and emit a 'submit new channel'
+        // message to the server.
 
-        // When a new channel is submitted, let the server know
-        // Emits 'submit new channel'
         document.querySelector('#add-channel-form').onsubmit = () => {
             const channel = sanitiseChannel(document.querySelector('#new-channel-name').value)
-            if (channel)
+            // if channel name is valid AND channel doesn't already exist
+            if (channel && !(document.getElementById(`channel-${channel}`))) {
                 socket.emit('submit new channel', {"channel": channel, "owner": name})
+            }
             document.querySelector('#new-channel-name').value = ""
             return false
         }
 
-        // When 'create channel' is recevied: add a new channel to the sidebar
+
+        // *** CREATE CHANNEL / CHANNEL CHANGER ***
+        // When a 'create channel' message is received from the server, append
+        // it to DOM. Attach listener to handle changing channels on click.
+
         socket.on('create channel', data => {
             const channel = data.channel
-            // Create new HTML element using data
-            const channelLink = document.createElement("li")
-            channelLink.innerHTML = channel
-            channelLink.className = 'channel-link'
-            channelLink.id = `channel-${channel}`
+
+            // Create a channel link from handlebars template
+            const context = {"channel": channel}
+            const channelLink = new DOMParser().parseFromString(channelTemplate(context), 'text/html').body.firstChild
 
             // Indent the link of the previous channel stored in memory
             // (this will only happen via the 'load channel list' event)
@@ -158,23 +175,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('channel-header').innerHTML = channel
 
             }
-
             // Clicking on a link changes it class/style and emits
             channelLink.onclick = () => {
                 // Check that a closed channel link was clicked
                 if (channelLink.className == 'channel-link') {
 
-                    // Clear overloaded background colour from message alert
-                    channelLink.style.backgroundColor = ""
-
-                    // Close previous channel
+                    // Close previous channel + open new channel
                     const openChannel = document.querySelector('.channel-link-open')
                     if (openChannel) {
                         openChannel.className = 'channel-link'
                     }
-
-                    // Update link class, this will trigger the animation
                     channelLink.className = 'channel-link-open'
+
                     // Store channel name in local storage
                     localStorage.setItem('channel', channel)
 
@@ -183,6 +195,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     while (messages.firstChild) {
                         messages.removeChild(messages.firstChild)
                     }
+
+                    // Reset received message alerts
+                    updateMessageAlert(channel, "reset")
 
                     // Change channel header
                     document.getElementById('channel-header').innerHTML = channel
@@ -198,8 +213,9 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 })
 
-// sanitiseChannel(str): takes a string as an argument and returns a santised
-// lc string if between 1-14 chars if possible. else returns false
+// *** sanitiseChannel(str) ***
+// takes a channel name as an argument and returns a santised version of it
+
 function sanitiseChannel(str) {
     // Check that string length is valid
     if (!str)
@@ -214,4 +230,15 @@ function sanitiseChannel(str) {
     while (string.includes("_"))
         string = string.replace("_", "-")
     return string
+}
+
+// *** messageAlert(channel, mode) ***
+// Manipulates the msg alerts of a give channel link badge
+
+function updateMessageAlert(channel, mode) {
+    const badge = document.getElementById(`${channel}-msg-alert`)
+    if (mode == "increment")
+        badge.innerHTML = Number(badge.innerHTML) + 1
+    else if (mode == "reset")
+        badge.innerHTML = ""
 }

@@ -22,11 +22,22 @@
             {%- endraw %}
         </script>
 
+        <!-- Handlebars template for welcome message -->
         <script id="welcomeMessageTemplate" type="text/x-handlebars-template">
             <li class="welcomeMessage">
                 <h3 class="text-muted">Welcome to Schwach</h3>
                 <p class="text-muted">Join an existing channel or create your own to begin chatting.</p>
             </li>
+        </script>
+
+        <!-- Handlecars template for channel link-->
+        <script id="channelLinkTemplate" type="text/x-handlebars-template">
+            {% raw -%}
+            <li class="channel-link" id="channel-{{channel}}">
+                <span id="{{channel}}-label">{{channel}}</span>
+                <span class="badge badge-pill badge-dark" id="{{channel}}-msg-alert"></span>
+            </li>
+            {%- endraw %}
         </script>
 
         <title>Schwach</title>
