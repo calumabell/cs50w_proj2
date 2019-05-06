@@ -3,24 +3,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port)
 
     // Template for message card
-    const messageTemplate = Handlebars.compile(document.querySelector('#cardTemplate').innerHTML)
-
-    // Load id from localStorage. If there isn't one, start it from zero again
-    let id = localStorage.getItem('id')
-    if (!id) {
-        id = 0
-        localStorage.setItem('id', id)
-    }
-
-    // Load username from localStorage. If there isn't one, get one
-    let name = localStorage.getItem('name')
-    if (!name) {
-        name = prompt("What is your name?")
-        localStorage.setItem('name', name)
-    }
+    const messageTemplate = Handlebars.compile(document.querySelector('#msgTemplate').innerHTML)
 
     // When connected, configure listeners
     socket.on('connect', () => {
+
+        // Load id from localStorage. If there isn't one, start it from zero again
+        let id = localStorage.getItem('id')
+        if (!id) {
+            id = 0
+            localStorage.setItem('id', id)
+        }
+
+        // Load username from localStorage. If there isn't one, get one
+        let name = localStorage.getItem('name')
+        if (!name) {
+            name = prompt("What is your name?")
+            localStorage.setItem('name', name)
+        }
+
+        document.getElementById('username-header').innerHTML = name
+
+        if (!localStorage.getItem('channel')) {
+            const welcomeTemp = Handlebars.compile(document.querySelector('#welcomeMessageTemplate').innerHTML)
+            document.getElementById('messages').innerHTML = welcomeTemp()
+        }
 
         // Once connected, load the channel list from server side memeory
         socket.emit('load channel list')
@@ -52,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const d = new Date()
 
-            socket.emit('submit message', {'id': ++id, 'name': name, 'msg': message, 'channel': channel, 'timestamp': d.toUTCString()})
+            socket.emit('submit message', {'name': name, 'msg': message, 'channel': channel, 'timestamp': d.toUTCString()})
 
             // return false to stop page from reloading
             return false
@@ -129,7 +136,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Emits 'submit new channel'
         document.querySelector('#add-channel-form').onsubmit = () => {
             const channel = sanitiseChannel(document.querySelector('#new-channel-name').value)
-            socket.emit('submit new channel', {"channel": channel, "owner": name})
+            if (channel)
+                socket.emit('submit new channel', {"channel": channel, "owner": name})
             document.querySelector('#new-channel-name').value = ""
             return false
         }

@@ -2,15 +2,16 @@ import os
 import sys
 
 from flask import Flask, render_template, request, url_for
-from flask_socketio import SocketIO, emit, join_room, leave_room
+from flask_socketio import SocketIO, emit
+
+channels = {}
+maxMsgPerCh = 100
+messageID = 0
 
 # Initialise Flask and SocketIO
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
-
-channels = {}
-maxMsgPerCh = 100
 
 
 @app.route("/")
@@ -41,6 +42,11 @@ def msg(data):
     channel = data["channel"]
     # add message to the front of the list at channel names dict key
     channels[channel]["msgs"].insert(0, data)
+
+    # Increment message ID and add it to message data
+    global messageID
+    messageID += 1
+    data["id"] = messageID
 
     # if no. messages exceeds max. remove the oldest msg
     if len(channels[channel]["msgs"]) >= maxMsgPerCh:

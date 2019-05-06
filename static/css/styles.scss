@@ -30,12 +30,16 @@
     bottom: 0;
     width: 100%;
     padding: 20px;
+
+    /* Styling for the message input text field */
+    #newMessage {
+        width: 50%;
+        white-space: nowrap;
+        overflow: hidden;
+        overflow-wrap: break-word;
+    }
 }
 
-/* Styling for the message input text field */
-#newMessage {
-    width: 50%;
-}
 
 /* Style for ul containing msg, padding stop messages being stuck behind form */
 #messages {
@@ -118,6 +122,8 @@ $message-margin: 5px 0px 5px 0px;
         padding: inherit;
         margin: inherit;
         margin-right: 15px;
+        padding-left: 5px;
+        padding-right: 5px;
         border-radius: 4px;
         height: 25%;
         border: 1px solid #FF0000;
@@ -168,4 +174,8 @@ $message-margin: 5px 0px 5px 0px;
 
 #add-channel-btn {
     font-size: 20pt;
+}
+
+.welcomeMessage {
+    padding: 15px;
 }
