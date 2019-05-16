@@ -18,6 +18,11 @@ socketio = SocketIO(app)
 def index():
     return render_template("index.html")
 
+@socketio.on('get id count')
+def getIdCount():
+    global messageID
+    emit('msg id from server', {"id": messageID})
+
 """ loadChannelList: on a 'load channel list' event, creates a new channel link
 for each channel stored in server memeory. This happens as soon as SocketIO is
 connected to reload channels made in other windows.
@@ -69,6 +74,7 @@ def deleteMessage(data):
             break
 
     emit('remove message from DOM', data, broadcast=True)
+
 
 @socketio.on('open channel')
 def openChannel(data):

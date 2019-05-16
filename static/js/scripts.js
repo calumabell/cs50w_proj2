@@ -8,16 +8,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Template for channel link
     const channelTemplate = Handlebars.compile(document.querySelector('#channelLinkTemplate').innerHTML)
 
-
     // When connected, configure listeners
     socket.on('connect', () => {
 
-        // Load id from localStorage. If there isn't one, start it from zero again
+        // Load id from localStorage. If there isn't one, get it from the server
         let id = localStorage.getItem('id')
         if (!id) {
-            id = 0
-            localStorage.setItem('id', id)
+            socket.emit('get id count')
         }
+
+
 
         // Load username from localStorage. If there isn't one, get one
         let name = localStorage.getItem('name')
@@ -42,6 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Once connected, load the channel list from server side memeory
         socket.emit('load channel list')
+
+        socket.on('msg id from server', data => {
+            id = data.id
+        })
 
         // *** NEW MESSAGE FORM SUBMITTED ***
         // When a new msg is submitted, run some checks and then send it (with
@@ -130,16 +134,20 @@ document.addEventListener('DOMContentLoaded', () => {
         // When the 'rmfD' is received trigger delete animation and rmv from DOM
 
         socket.on('remove message from DOM', data => {
-            // A bit of a hack -> cloning  msg node to reset CSS animation
-            const msgToDelete = document.getElementById(data.id)
-            const msgCopy = msgToDelete.cloneNode(true)
-            msgCopy.style.animationDirection = "normal"
-            msgCopy.style.animationPlayState = "running"
-            msgToDelete.parentNode.replaceChild(msgCopy, msgToDelete)
+            // Make sure user is in the correct channel before animating
+            if (data.channel == localStorage.getItem("channel")) {
+                // A bit of a hack -> cloning  msg node to reset CSS animation
+                const msgToDelete = document.getElementById(data.id)
+                const msgCopy = msgToDelete.cloneNode(true)
+                msgCopy.style.animationDirection = "normal"
+                msgCopy.style.animationPlayState = "running"
+                msgToDelete.parentNode.replaceChild(msgCopy, msgToDelete)
 
-            msgToDelete.addEventListener('animationend', () => {
-                msgCopy.parentNode.removeChild(msgCopy)
-            })
+                msgToDelete.addEventListener('animationend', () => {
+                    msgCopy.parentNode.removeChild(msgCopy)
+                })
+            }
+
         })
 
         // *** CREATE CHANNEL FORM SUBMITTED ***
@@ -241,4 +249,8 @@ function updateMessageAlert(channel, mode) {
         badge.innerHTML = Number(badge.innerHTML) + 1
     else if (mode == "reset")
         badge.innerHTML = ""
+    else if (mode = "decrement")
+        if (Number(badge.innerHTML) > 0)
+            badge.innerHTML = Number(badge.innerHTML) - 1
+    }
 }
