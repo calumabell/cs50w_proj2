@@ -249,7 +249,7 @@ function updateMessageAlert(channel, mode) {
         badge.innerHTML = Number(badge.innerHTML) + 1
     else if (mode == "reset")
         badge.innerHTML = ""
-    else if (mode = "decrement")
+    else if (mode = "decrement") {
         if (Number(badge.innerHTML) > 0)
             badge.innerHTML = Number(badge.innerHTML) - 1
     }
